@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full select-none">
+<html lang="en" class="h-full select-none">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tic Tac Boom - La Bombe</title>
+  <title>Tick Tack Boom - The Bomb Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body {
@@ -14,37 +14,37 @@
       -webkit-user-select: none;
     }
 
-    /* Secousse d'explosion */
+    /* Screen shake on detonation */
     @keyframes violent-shake {
       0% { transform: translate(0, 0) rotate(0deg); }
-      10% { transform: translate(-12px, -14px) rotate(-3deg); }
-      20% { transform: translate(14px, 10px) rotate(3deg); }
-      30% { transform: translate(-14px, 8px) rotate(-2deg); }
-      40% { transform: translate(12px, -12px) rotate(2deg); }
-      50% { transform: translate(-10px, 10px) rotate(-1.5deg); }
-      60% { transform: translate(10px, -8px) rotate(1.5deg); }
-      70% { transform: translate(-6px, 6px) rotate(-1deg); }
-      80% { transform: translate(5px, -4px) rotate(0.5deg); }
-      90% { transform: translate(-2px, 2px) rotate(0deg); }
+      10% { transform: translate(-14px, -16px) rotate(-3deg); }
+      20% { transform: translate(16px, 12px) rotate(3deg); }
+      30% { transform: translate(-16px, 10px) rotate(-2deg); }
+      40% { transform: translate(14px, -14px) rotate(2deg); }
+      50% { transform: translate(-12px, 12px) rotate(-1.5deg); }
+      60% { transform: translate(12px, -10px) rotate(1.5deg); }
+      70% { transform: translate(-8px, 8px) rotate(-1deg); }
+      80% { transform: translate(6px, -6px) rotate(0.5deg); }
+      90% { transform: translate(-3px, 3px) rotate(0deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
     }
 
     .shake-explosion {
-      animation: violent-shake 0.8s cubic-bezier(.36,.07,.19,.97) both;
+      animation: violent-shake 0.85s cubic-bezier(.36,.07,.19,.97) both;
     }
 
     @keyframes spark-flicker {
-      0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px #fde047); }
-      50% { opacity: 0.5; transform: scale(1.3); filter: drop-shadow(0 0 16px #f97316); }
+      0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px #fde047); }
+      50% { opacity: 0.6; transform: scale(1.35); filter: drop-shadow(0 0 18px #f97316); }
     }
 
     .sparkle {
-      animation: spark-flicker 0.16s infinite alternate ease-in-out;
+      animation: spark-flicker 0.15s infinite alternate ease-in-out;
     }
 
     @keyframes pulse-tense {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.06); }
     }
 
     .bomb-ticking {
@@ -58,10 +58,10 @@
 
   <main id="contentContainer" class="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white relative">
     
-    <!-- Zone centrale interactive -->
+    <!-- Central interactive hub -->
     <div class="max-w-md w-full flex flex-col items-center justify-center pointer-events-none space-y-6">
       
-      <!-- Visuel bombe -->
+      <!-- Bomb icon with animated fuse -->
       <div id="bombVisual" class="relative transition-transform duration-200">
         <div id="fuseSpark" class="hidden absolute -top-4 right-2 text-2xl sparkle pointer-events-none">
           🔥
@@ -76,32 +76,32 @@
         </svg>
       </div>
 
-      <!-- Titres dynamiques -->
+      <!-- Dynamic English headings & game prompts -->
       <h1 id="headline" class="text-4xl sm:text-6xl font-black tracking-tight uppercase drop-shadow-lg leading-tight">
-        TIC TAC BOOM
+        TICK TACK BOOM
       </h1>
 
       <p id="instruction" class="text-lg sm:text-xl text-white/95 font-semibold max-w-sm drop-shadow">
-        Touchez l'écran pour allumer la bombe !<br>
-        <span class="text-sm font-normal text-white/80">(Explosion aléatoire entre 5 et 15 sec)</span>
+        Tap anywhere to light the fuse!<br>
+        <span class="text-sm font-normal text-white/80">(Random detonation between 5 and 15 seconds)</span>
       </p>
 
       <div id="statsBadge" class="hidden px-5 py-2 rounded-full bg-black/40 backdrop-blur-md text-sm sm:text-base font-bold tracking-wide border border-white/20 shadow-xl">
-        La mèche a tenu <span id="heldDuration" class="text-amber-300">0.0</span>s avant d'exploser !
+        The fuse burned for <span id="heldDuration" class="text-amber-300">0.0</span>s before detonation!
       </div>
     </div>
 
-    <!-- Barre d'actions inférieure -->
+    <!-- Bottom interactive control bar -->
     <footer class="absolute bottom-5 left-0 right-0 flex flex-wrap justify-center items-center gap-2.5 pointer-events-auto px-4">
       <button id="soundToggleBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-1.5">
-        <span id="soundStatusIcon">🔊</span> Son activé
+        <span id="soundStatusIcon">🔊</span> Sound On
       </button>
 
       <button id="qrBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-1.5">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
         </svg>
-        QR Code & Jouer sur Mobile
+        QR Code & Play on Mobile
       </button>
     </footer>
 
@@ -110,31 +110,31 @@
         
         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
           <h2 class="text-lg font-bold flex items-center gap-2">
-            <span>📱</span> Jouer sur smartphone
+            <span>📱</span> Play on Mobile
           </h2>
           <button id="closeQrIconBtn" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
         </div>
 
-        <!-- Explication claire du problème QR code local -->
+        <!-- Educational explanation of client-side file constraints -->
         <div class="bg-amber-500/15 border border-amber-500/30 rounded-xl p-3.5 mb-4 text-xs text-amber-200 leading-relaxed">
-          <strong>Pourquoi un QR code seul ne peut pas "créer" le site ?</strong><br>
-          Un appareil photo de smartphone ne peut pas ouvrir de fichier local sur un autre appareil. Il a besoin soit d'une <strong>URL web</strong>, soit que le fichier <strong>soit téléchargé directement sur le téléphone</strong>.
+          <strong>Why can't a QR code contain the full application by itself?</strong><br>
+          Smartphone camera scanners cannot load external local computer files. They require either a <strong>live web URL</strong> or the standalone <strong>file saved directly on the mobile device</strong>.
         </div>
 
-        <!-- Option 1: Télécharger le fichier pour jouer hors-ligne -->
+        <!-- Option 1: Standalone offline file download -->
         <div class="bg-neutral-800/80 rounded-xl p-4 border border-white/5 mb-4">
-          <h3 class="text-sm font-semibold text-white mb-1">Méthode 100% Hors-Ligne (Sans serveur)</h3>
-          <p class="text-xs text-neutral-400 mb-3">Téléchargez le fichier HTML et envoyez-le par AirDrop / WhatsApp / Bluetooth. Il s'ouvrira en local dans Chrome ou Safari sans Internet !</p>
+          <h3 class="text-sm font-semibold text-white mb-1">Method 1: 100% Offline (No Server Needed)</h3>
+          <p class="text-xs text-neutral-400 mb-3">Download this single HTML file and send it to your phone via AirDrop, WhatsApp, or Bluetooth. It opens instantly in Safari/Chrome without an Internet connection!</p>
           <button id="downloadFileBtn" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Télécharger le jeu (fichier index.html)
+            Download Offline Game (index.html)
           </button>
         </div>
 
-        <!-- Option 2: QR Code de l'URL actuelle -->
+        <!-- Option 2: Live QR code generator for active web URL -->
         <div class="bg-neutral-800/80 rounded-xl p-4 border border-white/5 text-center">
-          <h3 class="text-sm font-semibold text-white mb-1">Méthode QR Code direct</h3>
-          <p class="text-xs text-neutral-400 mb-3">Scannez ce QR Code s'il est déjà hébergé en ligne (ex: GitHub Pages, Vercel) :</p>
+          <h3 class="text-sm font-semibold text-white mb-1">Method 2: Live QR Code Scan</h3>
+          <p class="text-xs text-neutral-400 mb-3">Scan this code directly if this application is hosted online (GitHub Pages, Vercel, Netlify):</p>
           
           <div class="bg-white p-3 rounded-xl inline-block shadow-md mb-2">
             <div id="qrcodeDisplay" class="flex justify-center items-center"></div>
@@ -144,7 +144,7 @@
         </div>
 
         <button id="closeQrBtn" class="w-full mt-4 py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-xs transition">
-          Fermer et retourner au jeu
+          Close and Back to Game
         </button>
       </div>
     </div>
@@ -158,7 +158,7 @@
     let startTime = 0;
     let soundEnabled = true;
 
-    // Éléments du DOM
+    // DOM Elements
     const gameScreen = document.getElementById('gameScreen');
     const contentContainer = document.getElementById('contentContainer');
     const bombVisual = document.getElementById('bombVisual');
@@ -191,7 +191,7 @@
       return audioCtx;
     }
 
-    // Bruit de tic-tac mécanique via Web Audio
+    // Procedural mechanical ticking pulse (Web Audio API)
     function playTickSound() {
       if (!soundEnabled) return;
       try {
@@ -216,13 +216,13 @@
       }
     }
 
-    // Explosion percutante (Sub-bass + bruit blanc)
+    // Procedural low-frequency shockwave & filtered white noise detonation
     function playExplosionSound() {
       if (!soundEnabled) return;
       try {
         const ctx = getAudioContext();
 
-        // 1. Onde de choc basse fréquence
+        // 1. Sub-bass shockwave drop
         const subOsc = ctx.createOscillator();
         const subGain = ctx.createGain();
         subOsc.type = 'sawtooth';
@@ -237,7 +237,7 @@
         subOsc.start();
         subOsc.stop(ctx.currentTime + 1.2);
 
-        // 2. Déflagration bruit blanc filtré
+        // 2. White noise burst with low-pass roll-off
         const bufferSize = ctx.sampleRate * 1.5;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -268,7 +268,7 @@
       }
     }
 
-    // Réinitialisation écran vert
+    // Reset to idle green screen
     function resetToGreen() {
       gameState = 'IDLE';
       if (explosionTimeout) clearTimeout(explosionTimeout);
@@ -280,59 +280,59 @@
       bombVisual.className = "relative transition-transform duration-200";
       fuseSpark.classList.add('hidden');
 
-      headline.textContent = "TIC TAC BOOM";
-      instruction.innerHTML = "Touchez l'écran pour allumer la bombe !<br><span class='text-sm font-normal text-white/80'>(Explosion aléatoire entre 5 et 15 sec)</span>";
+      headline.textContent = "TICK TACK BOOM";
+      instruction.innerHTML = "Tap anywhere to light the fuse!<br><span class='text-sm font-normal text-white/80'>(Random detonation between 5 and 15 seconds)</span>";
       statsBadge.classList.add('hidden');
     }
 
-    // Déclenchement de la bombe (L'ÉCRAN RESTE VERT)
+    // Start invisible countdown (STAYS GREEN)
     function startBombTimer() {
       gameState = 'ACTIVE';
       startTime = performance.now();
 
-      // Temporisation aléatoire stricte entre 5000 et 15000 ms (5 à 15 secondes)
+      // Random delay strictly between 5000ms and 15000ms (5 to 15 seconds)
       const chosenDurationMs = Math.floor(Math.random() * 10000) + 5000;
 
-      // Maintien du vert avec étincelle
+      // Screen remains green with spark and tense animation
       gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-200 bg-[#16a34a] cursor-pointer flex flex-col items-center justify-center";
       fuseSpark.classList.remove('hidden');
       bombVisual.className = "relative bomb-ticking";
 
-      headline.textContent = "LA MÈCHE BRÛLE...";
-      instruction.innerHTML = "Passez vite le téléphone !<br><span class='text-sm font-medium text-white/90 animate-pulse'>La bombe peut exploser d'une seconde à l'autre...</span>";
+      headline.textContent = "THE FUSE IS BURNING...";
+      instruction.innerHTML = "Pass the phone quickly!<br><span class='text-sm font-medium text-white/90 animate-pulse'>Detonation can occur at any millisecond...</span>";
       statsBadge.classList.add('hidden');
 
-      // Tics sonores réguliers
+      // Regular audible ticks
       playTickSound();
       tickInterval = setInterval(() => {
         playTickSound();
       }, 700);
 
-      // Fin du timer -> explosion
+      // Trigger detonation when time elapses
       explosionTimeout = setTimeout(() => {
         explodeBomb();
       }, chosenDurationMs);
     }
 
-    // Explosion -> ROUGE ÉCARLATE
+    // Detonate bomb -> Switch to RED
     function explodeBomb() {
       gameState = 'EXPLODED';
       if (tickInterval) clearInterval(tickInterval);
 
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
 
-      // Écran ROUGE vif
+      // Instant scarlet red background
       gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-75 bg-[#dc2626] cursor-pointer flex flex-col items-center justify-center";
       
       contentContainer.classList.remove('shake-explosion');
-      void contentContainer.offsetWidth; // Déclenchement de la secousse
+      void contentContainer.offsetWidth; // Trigger reflow for replayable shake animation
       contentContainer.classList.add('shake-explosion');
 
       fuseSpark.classList.add('hidden');
       bombVisual.className = "relative scale-125 transition-transform duration-100";
 
-      headline.textContent = "BOOM ! PERDU !";
-      instruction.innerHTML = "La bombe a explosé !<br><span class='text-sm font-bold text-white/95'>Touchez l'écran pour relancer.</span>";
+      headline.textContent = "BOOM! YOU LOSE!";
+      instruction.innerHTML = "The bomb exploded in your hands!<br><span class='text-sm font-bold text-white/95'>Tap anywhere to play again.</span>";
 
       heldDuration.textContent = elapsed;
       statsBadge.classList.remove('hidden');
@@ -343,7 +343,7 @@
       }
     }
 
-    // Gestion du clic d'écran
+    // Screen tap handler
     gameScreen.addEventListener('click', (e) => {
       if (qrModal.contains(e.target) || qrBtn.contains(e.target) || soundToggleBtn.contains(e.target)) {
         return;
@@ -358,20 +358,19 @@
       }
     });
 
-    // Bascule audio
+    // Sound toggle
     soundToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       soundEnabled = !soundEnabled;
       soundStatusIcon.textContent = soundEnabled ? '🔊' : '🔇';
-      soundToggleBtn.innerHTML = `${soundEnabled ? '🔊' : '🔇'} Son ${soundEnabled ? 'activé' : 'coupé'}`;
+      soundToggleBtn.innerHTML = `${soundEnabled ? '🔊' : '🔇'} Sound ${soundEnabled ? 'On' : 'Off'}`;
     });
 
-    // Affichage et génération QR Code fiable
+    // QR Code modal trigger
     qrBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       qrModal.classList.remove('hidden');
 
-      // Détecter l'adresse active
       const activeUrl = window.location.href;
       qrUrlLabel.textContent = activeUrl;
 
@@ -388,7 +387,7 @@
       }
     });
 
-    // Télécharger le fichier index.html direct pour téléphone
+    // Standalone HTML downloader for offline usage
     downloadFileBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
@@ -396,7 +395,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'tic-tac-boom.html';
+      a.download = 'tick-tack-boom.html';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
