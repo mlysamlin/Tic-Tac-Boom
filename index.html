@@ -70,6 +70,21 @@
     .blast-wave-anim {
       animation: blast-wave 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
     }
+
+    /* Logo styling */
+    #gameLogo {
+      max-width: 280px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+      pointer-events: none;
+    }
+
+    @media (max-width: 640px) {
+      #gameLogo {
+        max-width: 200px;
+      }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
@@ -141,10 +156,8 @@
 
       </div>
 
-      <!-- Main Game Titles -->
-      <h1 id="headline" class="text-4xl sm:text-6xl font-black tracking-tight uppercase drop-shadow-lg leading-tight">
-        TICK TACK BOOM
-      </h1>
+      <!-- Game Logo -->
+      <img id="gameLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 620 620'%3E%3Crect width='620' height='620' fill='%23ffeb3b'/%3E%3Ctext x='50%25' y='35%25' font-size='120' font-weight='900' text-anchor='middle' dominant-baseline='middle' fill='white' stroke='black' stroke-width='8' font-family='Arial, sans-serif' letter-spacing='8'%3ETic Tac%3C/text%3E%3Ccircle cx='310' cy='320' r='80' fill='%23000' stroke='black' stroke-width='5'/%3E%3Ccircle cx='310' cy='320' r='65' fill='%23ff0000'/%3E%3Cpath d='M310 255 L330 320 L310 385 L290 320 Z' fill='%23ffeb3b'/%3E%3Ctext x='50%25' y='75%25' font-size='140' font-weight='900' text-anchor='middle' dominant-baseline='middle' fill='%23ff0000' stroke='black' stroke-width='8' font-family='Arial, sans-serif' letter-spacing='4'%3EBOOM%3C/text%3E%3C/svg%3E" alt="Tic Tac Boom Logo">
 
       <!-- Clean instructions without duration giveaway -->
       <p id="instruction" class="text-lg sm:text-xl text-white/95 font-semibold max-w-sm drop-shadow">
@@ -158,13 +171,13 @@
 
     <!-- Bottom Controls -->
     <footer class="absolute bottom-5 left-0 right-0 flex justify-center items-center gap-3 pointer-events-auto px-4">
-      <button id="soundToggleBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-1.5">
+      <button id="soundToggleBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-2">
         <span id="soundStatusIcon">🔊</span> Sound On
       </button>
 
-      <button id="qrBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-1.5">
+      <button id="qrBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-2">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
         </svg>
         QR Code
       </button>
@@ -212,7 +225,7 @@
     const shockwaveRing = document.getElementById('shockwaveRing');
     const shockwaveRing2 = document.getElementById('shockwaveRing2');
     const fuseFlame = document.getElementById('fuseFlame');
-    const headline = document.getElementById('headline');
+    const gameLogo = document.getElementById('gameLogo');
     const instruction = document.getElementById('instruction');
     const statsBadge = document.getElementById('statsBadge');
     const heldDuration = document.getElementById('heldDuration');
@@ -331,7 +344,7 @@
       shockwaveRing.classList.add('hidden');
       shockwaveRing2.classList.add('hidden');
 
-      headline.textContent = "TICK TACK BOOM";
+      gameLogo.style.display = 'block';
       instruction.innerHTML = "Tap anywhere to light the fuse!";
       statsBadge.classList.add('hidden');
     }
@@ -348,7 +361,7 @@
       bombActor.className = "relative w-52 h-52 sm:w-60 sm:h-60 bomb-ticking";
       fuseFlame.classList.remove('hidden');
 
-      headline.textContent = "THE FUSE IS LIT!";
+      gameLogo.style.display = 'none';
       instruction.innerHTML = "Pass the bomb quickly!<br><span class='text-sm font-medium text-white/90 animate-pulse'>Detonation can occur at any second...</span>";
       statsBadge.classList.add('hidden');
 
@@ -385,7 +398,7 @@
       shockwaveRing.classList.add('blast-wave-anim');
       shockwaveRing2.classList.add('blast-wave-anim');
 
-      headline.textContent = "BOOM! YOU LOSE!";
+      gameLogo.style.display = 'none';
       instruction.innerHTML = "The bomb exploded in your hands!<br><span class='text-sm font-bold text-white/95'>Tap anywhere to play again.</span>";
 
       heldDuration.textContent = elapsed;
