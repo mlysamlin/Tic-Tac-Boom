@@ -71,82 +71,60 @@
       animation: blast-wave 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
     }
 
-    /* Logo styling */
+    /* Real logo display */
     #gameLogo {
-      max-width: 280px;
-      width: 100%;
+      max-width: min(88vw, 420px);
+      width: auto;
       height: auto;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+      display: block;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.18));
       pointer-events: none;
-    }
-
-    @media (max-width: 640px) {
-      #gameLogo {
-        max-width: 200px;
-      }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
-
 <body id="gameScreen" class="h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-300 bg-[#22c55e] cursor-pointer flex flex-col items-center justify-center">
 
   <main id="contentContainer" class="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white relative">
     
-    <!-- Central visual area -->
     <div class="max-w-md w-full flex flex-col items-center justify-center pointer-events-none space-y-6">
       
-      <!-- Bomb & Explosion Graphic Anchor -->
       <div id="bombVisualContainer" class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
         
-        <!-- Shockwave blast rings -->
         <div id="shockwaveRing" class="hidden absolute w-48 h-48 rounded-full border-4 border-yellow-300 pointer-events-none"></div>
         <div id="shockwaveRing2" class="hidden absolute w-48 h-48 rounded-full border-4 border-orange-400 pointer-events-none delay-100"></div>
 
-        <!-- 1. REDESIGNED SLEEK CARTOON BOMB (No face, centered collar & natural fuse) -->
         <div id="bombActor" class="relative w-52 h-52 sm:w-60 sm:h-60 transition-transform duration-200">
           
-          <!-- Animated Fire/Spark precisely positioned at the tip of the curved fuse -->
           <div id="fuseFlame" class="hidden absolute top-2 right-8 text-3xl sm:text-4xl sparkle pointer-events-none z-20">
             💥
           </div>
 
           <svg class="w-full h-full drop-shadow-2xl overflow-visible" viewBox="0 0 200 200" fill="none">
-            <!-- Natural curved rope fuse originating directly from the top center collar -->
             <path d="M106 62 C115 42, 132 35, 148 30 C156 28, 160 22, 164 16" 
                   stroke="#b45309" stroke-width="7" stroke-linecap="round" fill="none"/>
             <path d="M106 62 C115 42, 132 35, 148 30 C156 28, 160 22, 164 16" 
                   stroke="#fef08a" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 5" fill="none"/>
 
-            <!-- Centered metallic bomb collar / neck socket -->
             <path d="M88 64 L114 62 L117 76 L85 78 Z" fill="#374151" stroke="#1f2937" stroke-width="3"/>
             <ellipse cx="101" cy="63" rx="14" ry="4" fill="#4b5563"/>
 
-            <!-- Main circular bomb body -->
             <circle cx="100" cy="126" r="62" fill="#18181b" stroke="#09090b" stroke-width="5"/>
 
-            <!-- Smooth spherical glass gloss / glossy cartoon reflection (Replaces facial marks) -->
             <path d="M68 90 A 42 42 0 0 1 122 84" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.32" fill="none"/>
             <ellipse cx="78" cy="100" rx="14" ry="7" fill="#ffffff" opacity="0.35" transform="rotate(-35 78 100)"/>
             <circle cx="88" cy="93" r="3.5" fill="#ffffff" opacity="0.55"/>
 
-            <!-- Subtle soft bottom shadow for 3D depth -->
             <ellipse cx="100" cy="172" rx="36" ry="10" fill="#000000" opacity="0.3"/>
           </svg>
         </div>
 
-        <!-- 2. DETONATION / EXPLOSION GRAPHIC (Hidden until blast) -->
         <div id="explosionActor" class="hidden absolute inset-0 flex items-center justify-center scale-125 z-10">
           <svg class="w-64 h-64 sm:w-72 sm:h-72 drop-shadow-2xl overflow-visible" viewBox="0 0 200 200">
-            <!-- Outer jagged comic blast -->
             <polygon points="100,10 125,60 185,35 155,85 200,110 150,135 180,185 125,160 100,200 75,160 20,185 50,135 0,110 45,85 15,35 75,60" fill="#facc15" stroke="#ea580c" stroke-width="6"/>
-            <!-- Inner fireball -->
             <polygon points="100,30 118,68 160,52 138,88 170,110 132,126 150,165 115,145 100,175 82,145 50,165 65,126 30,110 62,88 40,52 82,68" fill="#f97316"/>
-            <!-- Core white flash -->
             <circle cx="100" cy="110" r="34" fill="#ffffff" filter="drop-shadow(0 0 16px #fde047)"/>
-            
-            <!-- Flying shrapnel fragments -->
             <path d="M40 50 L30 35 L48 40 Z" fill="#27272a"/>
             <path d="M165 40 L180 25 L160 30 Z" fill="#27272a"/>
             <path d="M170 160 L190 175 L165 175 Z" fill="#27272a"/>
@@ -156,10 +134,8 @@
 
       </div>
 
-      <!-- Game Logo -->
-      <img id="gameLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 620 620'%3E%3Crect width='620' height='620' fill='%23ffeb3b'/%3E%3Ctext x='50%25' y='35%25' font-size='120' font-weight='900' text-anchor='middle' dominant-baseline='middle' fill='white' stroke='black' stroke-width='8' font-family='Arial, sans-serif' letter-spacing='8'%3ETic Tac%3C/text%3E%3Ccircle cx='310' cy='320' r='80' fill='%23000' stroke='black' stroke-width='5'/%3E%3Ccircle cx='310' cy='320' r='65' fill='%23ff0000'/%3E%3Cpath d='M310 255 L330 320 L310 385 L290 320 Z' fill='%23ffeb3b'/%3E%3Ctext x='50%25' y='75%25' font-size='140' font-weight='900' text-anchor='middle' dominant-baseline='middle' fill='%23ff0000' stroke='black' stroke-width='8' font-family='Arial, sans-serif' letter-spacing='4'%3EBOOM%3C/text%3E%3C/svg%3E" alt="Tic Tac Boom Logo">
+      <img id="gameLogo" src="image-removebg-preview.png" alt="Tic Tac Boom" />
 
-      <!-- Clean instructions without duration giveaway -->
       <p id="instruction" class="text-lg sm:text-xl text-white/95 font-semibold max-w-sm drop-shadow">
         Tap anywhere to light the fuse!
       </p>
@@ -169,7 +145,6 @@
       </div>
     </div>
 
-    <!-- Bottom Controls -->
     <footer class="absolute bottom-5 left-0 right-0 flex justify-center items-center gap-3 pointer-events-auto px-4">
       <button id="soundToggleBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-2">
         <span id="soundStatusIcon">🔊</span> Sound On
@@ -183,7 +158,6 @@
       </button>
     </footer>
 
-    <!-- Clean, QR-Only Modal -->
     <div id="qrModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-neutral-900 text-white rounded-2xl max-w-xs w-full p-6 shadow-2xl border border-white/10 text-center pointer-events-auto flex flex-col items-center" onclick="event.stopPropagation()">
         
@@ -194,7 +168,6 @@
           <button id="closeQrIconBtn" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
         </div>
 
-        <!-- QR Display only -->
         <div class="bg-white p-3.5 rounded-xl shadow-lg my-2 flex justify-center items-center">
           <div id="qrcodeDisplay"></div>
         </div>
@@ -209,15 +182,13 @@
 
   </main>
 
-
   <script>
-    let gameState = 'IDLE'; // 'IDLE' | 'ACTIVE' | 'EXPLODED'
+    let gameState = 'IDLE';
     let explosionTimeout = null;
     let tickInterval = null;
     let startTime = 0;
     let soundEnabled = true;
 
-    // DOM References
     const gameScreen = document.getElementById('gameScreen');
     const contentContainer = document.getElementById('contentContainer');
     const bombActor = document.getElementById('bombActor');
@@ -251,7 +222,6 @@
       return audioCtx;
     }
 
-    // Procedural mechanical ticking sound
     function playTickSound() {
       if (!soundEnabled) return;
       try {
@@ -276,13 +246,11 @@
       }
     }
 
-    // Procedural detonation sound
     function playExplosionSound() {
       if (!soundEnabled) return;
       try {
         const ctx = getAudioContext();
 
-        // 1. Sub-bass rumble
         const subOsc = ctx.createOscillator();
         const subGain = ctx.createGain();
         subOsc.type = 'sawtooth';
@@ -297,7 +265,6 @@
         subOsc.start();
         subOsc.stop(ctx.currentTime + 1.4);
 
-        // 2. Filtered white noise burst
         const bufferSize = ctx.sampleRate * 1.5;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -328,7 +295,6 @@
       }
     }
 
-    // Reset to idle green screen
     function resetToGreen() {
       gameState = 'IDLE';
       if (explosionTimeout) clearTimeout(explosionTimeout);
@@ -349,12 +315,9 @@
       statsBadge.classList.add('hidden');
     }
 
-    // Start timer (10s to 30s) -> Screen remains green!
     function startBombTimer() {
       gameState = 'ACTIVE';
       startTime = performance.now();
-
-      // Invisible random timer between 10,000ms and 30,000ms
       const chosenDurationMs = Math.floor(Math.random() * (30000 - 10000)) + 10000;
 
       gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-300 bg-[#16a34a] cursor-pointer flex flex-col items-center justify-center";
@@ -375,7 +338,6 @@
       }, chosenDurationMs);
     }
 
-    // Detonate bomb -> Screen turns RED
     function explodeBomb() {
       gameState = 'EXPLODED';
       if (tickInterval) clearInterval(tickInterval);
@@ -410,7 +372,6 @@
       }
     }
 
-    // Click handler
     gameScreen.addEventListener('click', (e) => {
       if (qrModal.contains(e.target) || qrBtn.contains(e.target) || soundToggleBtn.contains(e.target)) {
         return;
@@ -425,14 +386,12 @@
       }
     });
 
-    // Sound toggle
     soundToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       soundEnabled = !soundEnabled;
       soundToggleBtn.innerHTML = `<span id="soundStatusIcon">${soundEnabled ? '🔊' : '🔇'}</span> Sound ${soundEnabled ? 'On' : 'Off'}`;
     });
 
-    // QR modal display
     qrBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       qrModal.classList.remove('hidden');
