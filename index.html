@@ -71,24 +71,24 @@
       animation: blast-wave 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
     }
 
-    /* Logo styling - positioned at top of bomb container */
+    /* Logo styling - positioned higher with more spacing */
     #gameLogo {
-      max-width: 120px;
+      max-width: 180px;
       height: auto;
       width: auto;
       display: block;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
       pointer-events: none;
       position: absolute;
-      top: -40px;
+      top: -100px;
       left: 50%;
       transform: translateX(-50%);
     }
 
     @media (max-width: 640px) {
       #gameLogo {
-        max-width: 90px;
-        top: -30px;
+        max-width: 140px;
+        top: -80px;
       }
     }
   </style>
