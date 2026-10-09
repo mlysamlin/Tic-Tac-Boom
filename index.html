@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tic Tac Boom</title>
+  <title>Tick Tack Boom - The Bomb Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html, body {
@@ -17,15 +17,15 @@
     /* Screen shake on detonation */
     @keyframes violent-shake {
       0% { transform: translate(0, 0) rotate(0deg); }
-      10% { transform: translate(-14px, -16px) rotate(-3deg); }
-      20% { transform: translate(16px, 12px) rotate(3deg); }
-      30% { transform: translate(-16px, 10px) rotate(-2deg); }
-      40% { transform: translate(14px, -14px) rotate(2deg); }
-      50% { transform: translate(-12px, 12px) rotate(-1.5deg); }
-      60% { transform: translate(12px, -10px) rotate(1.5deg); }
-      70% { transform: translate(-8px, 8px) rotate(-1deg); }
-      80% { transform: translate(6px, -6px) rotate(0.5deg); }
-      90% { transform: translate(-3px, 3px) rotate(0deg); }
+      10% { transform: translate(-18px, -20px) rotate(-4deg); }
+      20% { transform: translate(20px, 16px) rotate(4deg); }
+      30% { transform: translate(-20px, 14px) rotate(-3deg); }
+      40% { transform: translate(18px, -18px) rotate(3deg); }
+      50% { transform: translate(-14px, 14px) rotate(-2deg); }
+      60% { transform: translate(14px, -12px) rotate(2deg); }
+      70% { transform: translate(-10px, 10px) rotate(-1deg); }
+      80% { transform: translate(8px, -8px) rotate(0.5deg); }
+      90% { transform: translate(-4px, 4px) rotate(0deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
     }
 
@@ -33,66 +33,131 @@
       animation: violent-shake 0.85s cubic-bezier(.36,.07,.19,.97) both;
     }
 
+    /* Spark flame flickering on fuse tip */
     @keyframes spark-flicker {
-      0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px #fde047); }
-      50% { opacity: 0.6; transform: scale(1.35); filter: drop-shadow(0 0 18px #f97316); }
+      0%, 100% {
+        transform: scale(1) translate(0, 0) rotate(-6deg);
+        filter: drop-shadow(0 0 8px #fde047) drop-shadow(0 0 16px #ea580c);
+      }
+      50% {
+        transform: scale(1.35) translate(-2px, -2px) rotate(10deg);
+        filter: drop-shadow(0 0 16px #facc15) drop-shadow(0 0 24px #dc2626);
+      }
     }
 
     .sparkle {
-      animation: spark-flicker 0.15s infinite alternate ease-in-out;
+      animation: spark-flicker 0.12s infinite alternate ease-in-out;
     }
 
-    @keyframes pulse-tense {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
+    /* Tense bomb pulsing while lit */
+    @keyframes tense-pulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.04) rotate(-1.5deg); }
+      50% { transform: scale(1.02) rotate(0deg); }
+      75% { transform: scale(1.05) rotate(1.5deg); }
     }
 
     .bomb-ticking {
-      animation: pulse-tense 0.45s infinite ease-in-out;
+      animation: tense-pulse 0.45s infinite ease-in-out;
+    }
+
+    /* Expanding blast wave rings */
+    @keyframes blast-wave {
+      0% { transform: scale(0.2); opacity: 1; }
+      100% { transform: scale(2.6); opacity: 0; }
+    }
+
+    .blast-wave-anim {
+      animation: blast-wave 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
-<body id="gameScreen" class="h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-200 bg-[#22c55e] cursor-pointer flex flex-col items-center justify-center">
+
+<body id="gameScreen" class="h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-300 bg-[#22c55e] cursor-pointer flex flex-col items-center justify-center">
 
   <main id="contentContainer" class="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white relative">
     
-    <!-- Central interactive hub -->
+    <!-- Central visual area -->
     <div class="max-w-md w-full flex flex-col items-center justify-center pointer-events-none space-y-6">
       
-      <!-- Bomb icon with animated fuse -->
-      <div id="bombVisual" class="relative transition-transform duration-200">
-        <div id="fuseSpark" class="hidden absolute -top-4 right-2 text-2xl sparkle pointer-events-none">
-          🔥
+      <!-- Bomb & Explosion Graphic Anchor -->
+      <div id="bombVisualContainer" class="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+        
+        <!-- Shockwave blast rings -->
+        <div id="shockwaveRing" class="hidden absolute w-48 h-48 rounded-full border-4 border-yellow-300 pointer-events-none"></div>
+        <div id="shockwaveRing2" class="hidden absolute w-48 h-48 rounded-full border-4 border-orange-400 pointer-events-none delay-100"></div>
+
+        <!-- 1. REDESIGNED SLEEK CARTOON BOMB (No face, centered collar & natural fuse) -->
+        <div id="bombActor" class="relative w-52 h-52 sm:w-60 sm:h-60 transition-transform duration-200">
+          
+          <!-- Animated Fire/Spark precisely positioned at the tip of the curved fuse -->
+          <div id="fuseFlame" class="hidden absolute top-2 right-8 text-3xl sm:text-4xl sparkle pointer-events-none z-20">
+            💥
+          </div>
+
+          <svg class="w-full h-full drop-shadow-2xl overflow-visible" viewBox="0 0 200 200" fill="none">
+            <!-- Natural curved rope fuse originating directly from the top center collar -->
+            <path d="M106 62 C115 42, 132 35, 148 30 C156 28, 160 22, 164 16" 
+                  stroke="#b45309" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <path d="M106 62 C115 42, 132 35, 148 30 C156 28, 160 22, 164 16" 
+                  stroke="#fef08a" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 5" fill="none"/>
+
+            <!-- Centered metallic bomb collar / neck socket -->
+            <path d="M88 64 L114 62 L117 76 L85 78 Z" fill="#374151" stroke="#1f2937" stroke-width="3"/>
+            <ellipse cx="101" cy="63" rx="14" ry="4" fill="#4b5563"/>
+
+            <!-- Main circular bomb body -->
+            <circle cx="100" cy="126" r="62" fill="#18181b" stroke="#09090b" stroke-width="5"/>
+
+            <!-- Smooth spherical glass gloss / glossy cartoon reflection (Replaces facial marks) -->
+            <path d="M68 90 A 42 42 0 0 1 122 84" stroke="#ffffff" stroke-width="6" stroke-linecap="round" opacity="0.32" fill="none"/>
+            <ellipse cx="78" cy="100" rx="14" ry="7" fill="#ffffff" opacity="0.35" transform="rotate(-35 78 100)"/>
+            <circle cx="88" cy="93" r="3.5" fill="#ffffff" opacity="0.55"/>
+
+            <!-- Subtle soft bottom shadow for 3D depth -->
+            <ellipse cx="100" cy="172" rx="36" ry="10" fill="#000000" opacity="0.3"/>
+          </svg>
         </div>
 
-        <svg id="bombIcon" class="w-32 h-32 sm:w-40 sm:h-40 drop-shadow-2xl transition-transform duration-150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="11" cy="13" r="8" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/>
-          <path d="M16.5 7.5L19 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M19 5C19.5 4 20.5 3 22 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <line x1="8" y1="13" x2="14" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <line x1="11" y1="10" x2="11" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+        <!-- 2. DETONATION / EXPLOSION GRAPHIC (Hidden until blast) -->
+        <div id="explosionActor" class="hidden absolute inset-0 flex items-center justify-center scale-125 z-10">
+          <svg class="w-64 h-64 sm:w-72 sm:h-72 drop-shadow-2xl overflow-visible" viewBox="0 0 200 200">
+            <!-- Outer jagged comic blast -->
+            <polygon points="100,10 125,60 185,35 155,85 200,110 150,135 180,185 125,160 100,200 75,160 20,185 50,135 0,110 45,85 15,35 75,60" fill="#facc15" stroke="#ea580c" stroke-width="6"/>
+            <!-- Inner fireball -->
+            <polygon points="100,30 118,68 160,52 138,88 170,110 132,126 150,165 115,145 100,175 82,145 50,165 65,126 30,110 62,88 40,52 82,68" fill="#f97316"/>
+            <!-- Core white flash -->
+            <circle cx="100" cy="110" r="34" fill="#ffffff" filter="drop-shadow(0 0 16px #fde047)"/>
+            
+            <!-- Flying shrapnel fragments -->
+            <path d="M40 50 L30 35 L48 40 Z" fill="#27272a"/>
+            <path d="M165 40 L180 25 L160 30 Z" fill="#27272a"/>
+            <path d="M170 160 L190 175 L165 175 Z" fill="#27272a"/>
+            <path d="M35 160 L20 180 L40 175 Z" fill="#27272a"/>
+          </svg>
+        </div>
+
       </div>
 
-      <!-- Dynamic English headings & game prompts -->
+      <!-- Main Game Titles -->
       <h1 id="headline" class="text-4xl sm:text-6xl font-black tracking-tight uppercase drop-shadow-lg leading-tight">
         TICK TACK BOOM
       </h1>
 
+      <!-- Clean instructions without duration giveaway -->
       <p id="instruction" class="text-lg sm:text-xl text-white/95 font-semibold max-w-sm drop-shadow">
-        Tap anywhere to light the fuse!<br>
-        <span class="text-sm font-normal text-white/80">(Random detonation between 5 and 15 seconds)</span>
+        Tap anywhere to light the fuse!
       </p>
 
-      <div id="statsBadge" class="hidden px-5 py-2 rounded-full bg-black/40 backdrop-blur-md text-sm sm:text-base font-bold tracking-wide border border-white/20 shadow-xl">
+      <div id="statsBadge" class="hidden px-5 py-2.5 rounded-full bg-black/45 backdrop-blur-md text-sm sm:text-base font-bold tracking-wide border border-white/20 shadow-2xl">
         The fuse burned for <span id="heldDuration" class="text-amber-300">0.0</span>s before detonation!
       </div>
     </div>
 
-    <!-- Bottom interactive control bar -->
-    <footer class="absolute bottom-5 left-0 right-0 flex flex-wrap justify-center items-center gap-2.5 pointer-events-auto px-4">
+    <!-- Bottom Controls -->
+    <footer class="absolute bottom-5 left-0 right-0 flex justify-center items-center gap-3 pointer-events-auto px-4">
       <button id="soundToggleBtn" class="text-xs uppercase font-medium tracking-wider text-white px-3.5 py-2 rounded-full bg-black/25 hover:bg-black/40 backdrop-blur-sm transition border border-white/10 flex items-center gap-1.5">
         <span id="soundStatusIcon">🔊</span> Sound On
       </button>
@@ -101,55 +166,36 @@
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
         </svg>
-        QR Code & Play on Mobile
+        QR Code
       </button>
     </footer>
 
-    <div id="qrModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div class="bg-neutral-900 text-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-white/10 text-left pointer-events-auto max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+    <!-- Clean, QR-Only Modal -->
+    <div id="qrModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-neutral-900 text-white rounded-2xl max-w-xs w-full p-6 shadow-2xl border border-white/10 text-center pointer-events-auto flex flex-col items-center" onclick="event.stopPropagation()">
         
-        <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-          <h2 class="text-lg font-bold flex items-center gap-2">
-            <span>📱</span> Play on Mobile
+        <div class="w-full flex items-center justify-between pb-2 mb-3 border-b border-white/10">
+          <h2 class="text-base font-bold flex items-center gap-2">
+            <span>📱</span> Scan to Play
           </h2>
           <button id="closeQrIconBtn" class="text-neutral-400 hover:text-white text-xl leading-none">&times;</button>
         </div>
 
-        <!-- Educational explanation of client-side file constraints -->
-        <div class="bg-amber-500/15 border border-amber-500/30 rounded-xl p-3.5 mb-4 text-xs text-amber-200 leading-relaxed">
-          <strong>Why can't a QR code contain the full application by itself?</strong><br>
-          Smartphone camera scanners cannot load external local computer files. They require either a <strong>live web URL</strong> or the standalone <strong>file saved directly on the mobile device</strong>.
+        <!-- QR Display only -->
+        <div class="bg-white p-3.5 rounded-xl shadow-lg my-2 flex justify-center items-center">
+          <div id="qrcodeDisplay"></div>
         </div>
 
-        <!-- Option 1: Standalone offline file download -->
-        <div class="bg-neutral-800/80 rounded-xl p-4 border border-white/5 mb-4">
-          <h3 class="text-sm font-semibold text-white mb-1">Method 1: 100% Offline (No Server Needed)</h3>
-          <p class="text-xs text-neutral-400 mb-3">Download this single HTML file and send it to your phone via AirDrop, WhatsApp, or Bluetooth. It opens instantly in Safari/Chrome without an Internet connection!</p>
-          <button id="downloadFileBtn" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Download Offline Game (index.html)
-          </button>
-        </div>
+        <p class="text-[11px] text-neutral-400 mt-2 mb-4">Scan with any phone camera to join the game</p>
 
-        <!-- Option 2: Live QR code generator for active web URL -->
-        <div class="bg-neutral-800/80 rounded-xl p-4 border border-white/5 text-center">
-          <h3 class="text-sm font-semibold text-white mb-1">Method 2: Live QR Code Scan</h3>
-          <p class="text-xs text-neutral-400 mb-3">Scan this code directly if this application is hosted online (GitHub Pages, Vercel, Netlify):</p>
-          
-          <div class="bg-white p-3 rounded-xl inline-block shadow-md mb-2">
-            <div id="qrcodeDisplay" class="flex justify-center items-center"></div>
-          </div>
-
-          <p id="qrUrlLabel" class="text-[11px] text-neutral-400 break-all truncate font-mono"></p>
-        </div>
-
-        <button id="closeQrBtn" class="w-full mt-4 py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-xs transition">
-          Close and Back to Game
+        <button id="closeQrBtn" class="w-full py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-xs transition">
+          Close
         </button>
       </div>
     </div>
 
   </main>
+
 
   <script>
     let gameState = 'IDLE'; // 'IDLE' | 'ACTIVE' | 'EXPLODED'
@@ -158,11 +204,14 @@
     let startTime = 0;
     let soundEnabled = true;
 
-    // DOM Elements
+    // DOM References
     const gameScreen = document.getElementById('gameScreen');
     const contentContainer = document.getElementById('contentContainer');
-    const bombVisual = document.getElementById('bombVisual');
-    const fuseSpark = document.getElementById('fuseSpark');
+    const bombActor = document.getElementById('bombActor');
+    const explosionActor = document.getElementById('explosionActor');
+    const shockwaveRing = document.getElementById('shockwaveRing');
+    const shockwaveRing2 = document.getElementById('shockwaveRing2');
+    const fuseFlame = document.getElementById('fuseFlame');
     const headline = document.getElementById('headline');
     const instruction = document.getElementById('instruction');
     const statsBadge = document.getElementById('statsBadge');
@@ -175,8 +224,6 @@
     const closeQrBtn = document.getElementById('closeQrBtn');
     const closeQrIconBtn = document.getElementById('closeQrIconBtn');
     const qrcodeDisplay = document.getElementById('qrcodeDisplay');
-    const qrUrlLabel = document.getElementById('qrUrlLabel');
-    const downloadFileBtn = document.getElementById('downloadFileBtn');
 
     let qrcodeInstance = null;
     let audioCtx = null;
@@ -191,7 +238,7 @@
       return audioCtx;
     }
 
-    // Procedural mechanical ticking pulse (Web Audio API)
+    // Procedural mechanical ticking sound
     function playTickSound() {
       if (!soundEnabled) return;
       try {
@@ -200,10 +247,10 @@
         const gain = ctx.createGain();
 
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1200, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.035);
+        osc.frequency.setValueAtTime(1400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.035);
 
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
 
         osc.connect(gain);
@@ -216,28 +263,28 @@
       }
     }
 
-    // Procedural low-frequency shockwave & filtered white noise detonation
+    // Procedural detonation sound
     function playExplosionSound() {
       if (!soundEnabled) return;
       try {
         const ctx = getAudioContext();
 
-        // 1. Sub-bass shockwave drop
+        // 1. Sub-bass rumble
         const subOsc = ctx.createOscillator();
         const subGain = ctx.createGain();
         subOsc.type = 'sawtooth';
-        subOsc.frequency.setValueAtTime(160, ctx.currentTime);
-        subOsc.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 1.2);
+        subOsc.frequency.setValueAtTime(180, ctx.currentTime);
+        subOsc.frequency.exponentialRampToValueAtTime(20, ctx.currentTime + 1.4);
 
-        subGain.gain.setValueAtTime(0.9, ctx.currentTime);
-        subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        subGain.gain.setValueAtTime(1.0, ctx.currentTime);
+        subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
 
         subOsc.connect(subGain);
         subGain.connect(ctx.destination);
         subOsc.start();
-        subOsc.stop(ctx.currentTime + 1.2);
+        subOsc.stop(ctx.currentTime + 1.4);
 
-        // 2. White noise burst with low-pass roll-off
+        // 2. Filtered white noise burst
         const bufferSize = ctx.sampleRate * 1.5;
         const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -250,19 +297,19 @@
 
         const filter = ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(1000, ctx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 1.3);
+        filter.frequency.setValueAtTime(1200, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 1.5);
 
         const noiseGain = ctx.createGain();
         noiseGain.gain.setValueAtTime(1.0, ctx.currentTime);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.3);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
 
         whiteNoise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
 
         whiteNoise.start();
-        whiteNoise.stop(ctx.currentTime + 1.4);
+        whiteNoise.stop(ctx.currentTime + 1.5);
       } catch (e) {
         console.warn(e);
       }
@@ -274,62 +321,69 @@
       if (explosionTimeout) clearTimeout(explosionTimeout);
       if (tickInterval) clearInterval(tickInterval);
 
-      gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-200 bg-[#22c55e] cursor-pointer flex flex-col items-center justify-center";
+      gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-300 bg-[#22c55e] cursor-pointer flex flex-col items-center justify-center";
       contentContainer.classList.remove('shake-explosion');
 
-      bombVisual.className = "relative transition-transform duration-200";
-      fuseSpark.classList.add('hidden');
+      bombActor.classList.remove('hidden');
+      bombActor.className = "relative w-52 h-52 sm:w-60 sm:h-60 transition-transform duration-200";
+      fuseFlame.classList.add('hidden');
+      explosionActor.classList.add('hidden');
+      shockwaveRing.classList.add('hidden');
+      shockwaveRing2.classList.add('hidden');
 
       headline.textContent = "TICK TACK BOOM";
-      instruction.innerHTML = "Tap anywhere to light the fuse!<br><span class='text-sm font-normal text-white/80'>(Random detonation between 5 and 15 seconds)</span>";
+      instruction.innerHTML = "Tap anywhere to light the fuse!";
       statsBadge.classList.add('hidden');
     }
 
-    // Start invisible countdown (STAYS GREEN)
+    // Start timer (10s to 30s) -> Screen remains green!
     function startBombTimer() {
       gameState = 'ACTIVE';
       startTime = performance.now();
 
-      // Random delay strictly between 5000ms and 15000ms (5 to 15 seconds)
-      const chosenDurationMs = Math.floor(Math.random() * 10000) + 5000;
+      // Invisible random timer between 10,000ms and 30,000ms
+      const chosenDurationMs = Math.floor(Math.random() * (30000 - 10000)) + 10000;
 
-      // Screen remains green with spark and tense animation
-      gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-200 bg-[#16a34a] cursor-pointer flex flex-col items-center justify-center";
-      fuseSpark.classList.remove('hidden');
-      bombVisual.className = "relative bomb-ticking";
+      gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-300 bg-[#16a34a] cursor-pointer flex flex-col items-center justify-center";
+      bombActor.className = "relative w-52 h-52 sm:w-60 sm:h-60 bomb-ticking";
+      fuseFlame.classList.remove('hidden');
 
-      headline.textContent = "THE FUSE IS BURNING...";
-      instruction.innerHTML = "Pass the phone quickly!<br><span class='text-sm font-medium text-white/90 animate-pulse'>Detonation can occur at any millisecond...</span>";
+      headline.textContent = "THE FUSE IS LIT!";
+      instruction.innerHTML = "Pass the bomb quickly!<br><span class='text-sm font-medium text-white/90 animate-pulse'>Detonation can occur at any second...</span>";
       statsBadge.classList.add('hidden');
 
-      // Regular audible ticks
       playTickSound();
       tickInterval = setInterval(() => {
         playTickSound();
-      }, 700);
+      }, 650);
 
-      // Trigger detonation when time elapses
       explosionTimeout = setTimeout(() => {
         explodeBomb();
       }, chosenDurationMs);
     }
 
-    // Detonate bomb -> Switch to RED
+    // Detonate bomb -> Screen turns RED
     function explodeBomb() {
       gameState = 'EXPLODED';
       if (tickInterval) clearInterval(tickInterval);
 
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
 
-      // Instant scarlet red background
       gameScreen.className = "h-full m-0 p-0 font-sans antialiased overflow-hidden transition-colors duration-75 bg-[#dc2626] cursor-pointer flex flex-col items-center justify-center";
       
       contentContainer.classList.remove('shake-explosion');
-      void contentContainer.offsetWidth; // Trigger reflow for replayable shake animation
+      void contentContainer.offsetWidth;
       contentContainer.classList.add('shake-explosion');
 
-      fuseSpark.classList.add('hidden');
-      bombVisual.className = "relative scale-125 transition-transform duration-100";
+      bombActor.classList.add('hidden');
+      explosionActor.classList.remove('hidden');
+      fuseFlame.classList.add('hidden');
+
+      shockwaveRing.classList.remove('hidden', 'blast-wave-anim');
+      shockwaveRing2.classList.remove('hidden', 'blast-wave-anim');
+      void shockwaveRing.offsetWidth;
+      shockwaveRing.classList.add('blast-wave-anim');
+      shockwaveRing2.classList.add('blast-wave-anim');
 
       headline.textContent = "BOOM! YOU LOSE!";
       instruction.innerHTML = "The bomb exploded in your hands!<br><span class='text-sm font-bold text-white/95'>Tap anywhere to play again.</span>";
@@ -339,11 +393,11 @@
 
       playExplosionSound();
       if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate([200, 100, 300]);
+        window.navigator.vibrate([250, 100, 350]);
       }
     }
 
-    // Screen tap handler
+    // Click handler
     gameScreen.addEventListener('click', (e) => {
       if (qrModal.contains(e.target) || qrBtn.contains(e.target) || soundToggleBtn.contains(e.target)) {
         return;
@@ -362,44 +416,27 @@
     soundToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       soundEnabled = !soundEnabled;
-      soundStatusIcon.textContent = soundEnabled ? '🔊' : '🔇';
-      soundToggleBtn.innerHTML = `${soundEnabled ? '🔊' : '🔇'} Sound ${soundEnabled ? 'On' : 'Off'}`;
+      soundToggleBtn.innerHTML = `<span id="soundStatusIcon">${soundEnabled ? '🔊' : '🔇'}</span> Sound ${soundEnabled ? 'On' : 'Off'}`;
     });
 
-    // QR Code modal trigger
+    // QR modal display
     qrBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       qrModal.classList.remove('hidden');
 
       const activeUrl = window.location.href;
-      qrUrlLabel.textContent = activeUrl;
 
       if (!qrcodeInstance) {
         qrcodeDisplay.innerHTML = '';
         qrcodeInstance = new QRCode(qrcodeDisplay, {
           text: activeUrl,
-          width: 170,
-          height: 170,
+          width: 180,
+          height: 180,
           colorDark: "#000000",
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.M
         });
       }
-    });
-
-    // Standalone HTML downloader for offline usage
-    downloadFileBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tick-tack-boom.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     });
 
     const closeModals = (e) => {
